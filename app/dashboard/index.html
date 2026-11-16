@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sahabi | سحابي - منصة التقييم الاستراتيجي</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;600;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --sky: #18AEE6;
+      --navy: #2B2F86;
+      --navy-light: #3d42a3;
+      --bg: #F8FAFC;
+    }
+
+    body {
+      font-family: 'Noto Sans Arabic', 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg);
+    }
+
+    .brand-gradient {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--sky) 100%);
+    }
+
+    .brand-text-gradient {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--sky) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sidebar-link.active {
+      background: rgba(24, 174, 230, 0.1);
+      color: var(--navy);
+      border-left: 4px solid var(--sky);
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(43, 47, 134, 0.05);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .landing-gradient-text {
+      background: linear-gradient(90deg, #2B2F86, #18AEE6, #6366f1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Chat Bubbles */
+    .message-ai {
+      background: #ffffff;
+      border: 1px solid #edf2f7;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      border-radius: 20px 4px 20px 20px;
+      max-width: 75%;
+    }
+
+    .message-user {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      color: white;
+      border-radius: 4px 20px 20px 20px;
+      box-shadow: 0 4px 15px rgba(43, 47, 134, 0.15);
+      max-width: 75%;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .roadmap-step {
+      position: relative;
+      padding-right: 2.5rem;
+    }
+
+    .roadmap-step::before {
+      content: '';
+      position: absolute;
+      right: 0.75rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #e2e8f0;
+    }
+
+    .roadmap-step:last-child::before {
+      display: none;
+    }
+
+    .roadmap-dot {
+      position: absolute;
+      right: 0.35rem;
+      top: 0.25rem;
+      width: 1rem;
+      height: 1rem;
+      border-radius: 50%;
+      background: var(--sky);
+      border: 2px solid white;
+      box-shadow: 0 0 0 2px var(--sky);
+    }
+  </style>
+</head>
+
+<body class="text-slate-800 overflow-hidden text-right">
+
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside class="hidden md:flex flex-col w-[260px] bg-white border-l border-slate-200 z-50">
+      <div class="p-6">
+        <div class="flex items-center gap-3">
+          <div class="w-15 h-15 rounded-xl bg-white grid place-items-center shadow-lg shadow-sky-200 overflow-hidden">
+            <img src="./logo.png" alt="سحابي" class="w-16 h-16 object-contain" />
+          </div>
+          <span class="text-2xl font-black text-[#2B2F86] tracking-tight">سحابي</span>
+        </div>
+      </div>
+
+      <nav class="flex-1 px-4 mt-4 space-y-2">
+        <button onclick="switchTab('dashboard')" id="btn-dashboard"
+          class="sidebar-link active w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+            </path>
+          </svg>
+          <span>الرئيسية</span>
+        </button>
+        <button onclick="switchTab('chat')" id="btn-chat"
+          class="sidebar-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
+            </path>
+          </svg>
+          <span>اسأل سحابي</span>
+        </button>
+      </nav>
+
+      <div class="p-4 border-t border-slate-100">
+        <div class="bg-slate-50 rounded-2xl p-4">
+          <p class="text-xs font-semibold text-slate-400 mb-2 italic">المنتجات المفتوحة المصدر</p>
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            <span class="text-xs text-slate-600 font-bold">جاهزية الترحيل السحابي</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <!-- Top Header -->
+      <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-40">
+        <div class="flex items-center gap-4">
+          <h2 id="page-title" class="text-lg font-bold text-slate-800">الرئيسية</h2>
+        </div>
+        <div class="flex items-center gap-3">
+          <span id="status-chip"
+            class="text-[10px] px-2 py-1 rounded-md font-bold uppercase tracking-wider bg-slate-100 text-slate-500">جهاز
+            جاهز</span>
+        </div>
+      </header>
+
+      <!-- Scrollable Area -->
+      <div id="content-area" class="flex-1 overflow-y-auto custom-scrollbar">
+
+        <!-- Tab: Dashboard -->
+        <div id="tab-dashboard" class="fade-in">
+
+          <!-- Landing View -->
+          <div id="landing-view" class="max-w-6xl mx-auto py-20 px-8 text-center">
+            <div
+              class="inline-flex items-center gap-2 bg-sky-50 text-sky-600 px-6 py-2.5 rounded-full text-[10px] font-black mb-10 border border-sky-100 shadow-sm uppercase tracking-[0.2em]">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.477.859h4.00z">
+                </path>
+              </svg>
+              بروتوكول جاهزية السحابة الحكومية السعودية
+            </div>
+
+            <h1 class="text-6xl md:text-7xl font-black text-slate-900 mb-8 leading-[1.1] tracking-tight">
+              نقل الأنظمة الحكومية <br />
+              <span class="landing-gradient-text underline decoration-sky-100 underline-offset-8">في دقائق معدودة</span>
+            </h1>
+
+            <p class="text-xl md:text-2xl text-slate-500 max-w-3xl mx-auto mb-16 leading-relaxed font-medium">
+              أداة مفتوحة المصدر لجمع معلومات التطبيقات، تقييم توافق الـ Docker، واقتراح أولويات الانتقال بذكاء وفق
+              ضوابط <span class="text-slate-900 font-black italic">NCA</span> و <span
+                class="text-slate-900 font-black italic">DGA</span>.
+            </p>
+
+            <div
+              class="bg-white/40 backdrop-blur-3xl p-4 rounded-[40px] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-white/50 max-w-3xl mx-auto ring-1 ring-slate-100">
+              <div class="bg-white p-3 rounded-[32px] flex flex-col md:flex-row gap-3">
+                <div
+                  class="flex-1 flex items-center px-8 py-5 bg-slate-50 rounded-2xl group transition-all focus-within:bg-white focus-within:ring-2 ring-sky-100">
+                  <svg class="w-6 h-6 text-slate-300 ml-4 group-focus-within:text-sky-600 transition-colors" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                  </svg>
+                  <input id="repoUrl" type="text" placeholder="رابط مستودع GitHub (مثلاً: pallets/flask)..."
+                    class="bg-transparent border-none outline-none w-full font-bold text-slate-900 placeholder:text-slate-300 text-right"
+                    value="https://github.com/pallets/flask.git" />
+                </div>
+                <button id="analyzeBtn"
+                  class="px-10 py-5 rounded-2xl font-black text-lg transition-all flex items-center justify-center gap-3 active:scale-95 shadow-2xl shadow-sky-200 brand-gradient text-white hover:opacity-90">
+                  <span id="btn-text">ابدأ التقييم</span>
+                  <svg class="w-5 h-5 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="mt-32 grid grid-cols-2 md:grid-cols-4 gap-10 opacity-80 hover:opacity-100 transition-opacity">
+              <div class="flex flex-col items-center">
+                <div
+                  class="w-16 h-16 rounded-[24px] bg-white shadow-xl shadow-slate-100 border border-slate-50 flex items-center justify-center mb-5 hover:scale-110 transition-transform">
+                  <svg class="w-8 h-8 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9.663 17h4.674a1 1 0 00.908-.588l3.358-7.605a1 1 0 00-.908-1.407H4.305a1 1 0 00-.908 1.407l3.358 7.605a1 1 0 00.908.588z">
+                    </path>
+                  </svg>
+                </div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">AI Core</span>
+                <span class="text-sm font-bold text-slate-900 mt-1 uppercase">Decision Engine</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <div
+                  class="w-16 h-16 rounded-[24px] bg-white shadow-xl shadow-slate-100 border border-slate-50 flex items-center justify-center mb-5 hover:scale-110 transition-transform">
+                  <svg class="w-8 h-8 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                    </path>
+                  </svg>
+                </div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Security</span>
+                <span class="text-sm font-bold text-slate-900 mt-1 uppercase">Compliance Lock</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <div
+                  class="w-16 h-16 rounded-[24px] bg-white shadow-xl shadow-slate-100 border border-slate-50 flex items-center justify-center mb-5 hover:scale-110 transition-transform">
+                  <svg class="w-8 h-8 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                    </path>
+                  </svg>
+                </div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Logic</span>
+                <span class="text-sm font-bold text-slate-900 mt-1 uppercase">6 R's Strategy</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <div
+                  class="w-16 h-16 rounded-[24px] bg-white shadow-xl shadow-slate-100 border border-slate-50 flex items-center justify-center mb-5 hover:scale-110 transition-transform">
+                  <svg class="w-8 h-8 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2-2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                    </path>
+                  </svg>
+                </div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Sovereignty</span>
+                <span class="text-sm font-bold text-slate-900 mt-1 uppercase">DGA Enforced</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard Results View -->
+          <div id="results-view" class="hidden p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-2xl font-black text-[#2B2F86]">تقرير الجاهزية السحابية الاستراتيجي</h3>
+                <p id="results-meta" class="text-slate-500 text-sm mt-1"></p>
+              </div>
+              <button onclick="resetAnalysis()"
+                class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 font-bold text-sm transition flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                  </path>
+                </svg>
+                تحليل جديد
+              </button>
+            </div>
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div class="glass-card p-6 rounded-3xl shadow-sm border-r-4 border-r-sky-500">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">الاستراتيجية</span>
+                <div id="strategy" class="text-2xl font-black text-[#2B2F86] mt-1">—</div>
+                <div id="confidence" class="text-xs text-sky-500 font-semibold mt-2">الثقة: —</div>
+              </div>
+              <div class="glass-card p-6 rounded-3xl shadow-sm border-r-4 border-r-amber-500">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">الامتثال السيبراني</span>
+                <div id="complianceFlag" class="text-xl font-black text-slate-400 mt-1">—</div>
+                <div class="w-full bg-slate-100 h-1.5 rounded-full mt-4 overflow-hidden">
+                  <div id="complianceBar" class="bg-slate-300 h-full w-0 transition-all duration-1000"></div>
+                </div>
+              </div>
+              <div class="glass-card p-6 rounded-3xl shadow-sm border-r-4 border-r-[#2B2F86]">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">اللغة الأساسية</span>
+                <div id="mainLang" class="text-3xl font-black text-[#2B2F86] mt-1">—</div>
+                <div class="text-xs text-slate-400 mt-2 italic">Flask-based architecture</div>
+              </div>
+              <div class="glass-card p-6 rounded-3xl shadow-sm border-r-4 border-r-slate-300">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">حجم المشروع</span>
+                <div id="loc" class="text-3xl font-black text-[#2B2F86] mt-1">—</div>
+                <div class="text-xs text-slate-400 mt-2">سطر برمجي (LOC)</div>
+              </div>
+            </div>
+            <!-- New Visual Data Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div class="lg:col-span-2 glass-card p-6 rounded-3xl shadow-sm">
+                <h4 class="text-md font-bold text-[#2B2F86] mb-6 flex items-center gap-2">
+                  <svg class="w-5 h-5 text-sky-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z">
+                    </path>
+                  </svg>
+                  توزيع لغات البرمجة والملفات
+                </h4>
+                <div class="h-[250px] flex items-center justify-center">
+                  <canvas id="langChart"></canvas>
+                </div>
+              </div>
+              <div class="glass-card p-6 rounded-3xl shadow-sm flex flex-col items-center justify-center">
+                <h4 class="text-md font-bold text-[#2B2F86] mb-6">مؤشر الجاهزية الكلي</h4>
+                <div class="relative w-40 h-40">
+                  <canvas id="readinessScoreChart"></canvas>
+                  <div class="absolute inset-0 flex items-center justify-center flex-col">
+                    <span id="scoreVal" class="text-3xl font-black text-[#2B2F86]">0%</span>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase">Ready</span>
+                  </div>
+                </div>
+                <p class="text-xs text-center text-slate-400 mt-6 leading-relaxed">بناءً على معايير الحاويات
+                  (Dockerization) وجودة الكود والامتثال.</p>
+              </div>
+            </div>
+
+            <!-- Strategic Roadmap & Insights -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div class="space-y-6">
+                <!-- Roadmap -->
+                <div class="glass-card rounded-3xl p-8 shadow-sm">
+                  <h4 class="text-lg font-bold text-[#2B2F86] mb-8 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m11 13l-5.447-2.724a1 1 0 01-.553-.894V5.618a1 1 0 011.447-.894L21 7m-11 13v-13m0 13l5.447-2.724a1 1 0 011.106 0L21 20M9 7l5.447-2.724a1 1 0 011.106 0L21 7">
+                      </path>
+                    </svg>
+                    الخطة الاستراتيجية للترحيل السحابي
+                  </h4>
+                  <div id="roadmapContent" class="space-y-8">
+                    <!-- Steps will be injected -->
+                  </div>
+                </div>
+
+                <div class="glass-card rounded-3xl p-8 shadow-sm">
+                  <h4 class="text-lg font-bold text-[#2B2F86] mb-4 flex items-center gap-2">
+                    <span class="w-2 h-6 bg-red-400 rounded-full"></span>
+                    المخاطر والتحديات
+                  </h4>
+                  <ul id="risks" class="space-y-3"></ul>
+                </div>
+              </div>
+
+              <div class="space-y-6">
+                <!-- Code Quality Info -->
+                <div class="glass-card rounded-3xl p-8 shadow-sm">
+                  <h4 class="text-lg font-bold text-[#2B2F86] mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                    </svg>
+                    تحليل جودة الكود وبنيته
+                  </h4>
+                  <div id="codeInsights" class="space-y-4">
+                    <!-- Insights injected here -->
+                  </div>
+                </div>
+
+                <div class="glass-card rounded-3xl p-8 shadow-sm">
+                  <h4 class="text-lg font-bold text-[#2B2F86] mb-4 flex items-center gap-2">
+                    <span class="w-2 h-6 brand-gradient rounded-full"></span>
+                    مبررات التوصية (Explainability)
+                  </h4>
+                  <ul id="reasons" class="space-y-3"></ul>
+                </div>
+
+                <div class="glass-card rounded-3xl p-8 shadow-sm">
+                  <h4 class="text-lg font-bold text-[#2B2F86] mb-4 flex items-center gap-2">
+                    <span class="w-2 h-6 bg-amber-400 rounded-full"></span>
+                    ملاحظات الامتثال NCA
+                  </h4>
+                  <div id="complianceIssues" class="space-y-2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Chat -->
+        <div id="tab-chat" class="hidden fade-in h-full flex flex-col p-8">
+          <div
+            class="max-w-4xl mx-auto w-full flex flex-col h-full bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
+            <div class="p-6 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-12 h-12 rounded-full bg-white grid place-items-center overflow-hidden border border-slate-200">
+                  <img src="./logo.png" alt="سحابي" class="w-11 h-11 object-contain" />
+                </div>
+
+                <div>
+                  <h4 class="font-bold text-[#2B2F86]">المساعد الذكي (سحابي)</h4>
+                  <p class="text-xs text-slate-400 italic">نحن هنا للإجابة على تساؤلات ترحيل تطبيقاتك</p>
+                </div>
+              </div>
+            </div>
+
+            <div id="chatHistory"
+              class="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar bg-[#fdfdfe] flex flex-col"></div>
+
+            <div class="p-6 bg-white border-t border-slate-100">
+              <div class="flex gap-3 bg-slate-50 p-2 rounded-2xl border border-slate-200">
+                <input id="question" type="text"
+                  class="flex-1 bg-transparent border-none outline-none px-4 text-sm font-medium"
+                  placeholder="اسأل عن أي تفاصيل في التقرير...">
+                <button id="askBtn"
+                  class="brand-gradient text-white w-12 h-12 rounded-xl grid place-items-center shadow-lg hover:scale-105 active:scale-95 transition">
+                  <svg class="w-5 h-5 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+<script>
+  let currentScanId = null;
+  let currentReport = null;
+  let charts = {};
+
+  const $ = (id) => document.getElementById(id);
+
+  function switchTab(tab) {
+    const tabs = ['dashboard', 'chat'];
+    tabs.forEach(t => {
+      $(`tab-${t}`).classList.add('hidden');
+      $(`btn-${t}`).classList.remove('active', 'bg-slate-50', 'text-[#2B2F86]');
+      $(`btn-${t}`).classList.add('text-slate-500');
+    });
+    $(`tab-${tab}`).classList.remove('hidden');
+    $(`btn-${tab}`).classList.add('active');
+    $(`btn-${tab}`).classList.remove('text-slate-500');
+    $('page-title').textContent = tab === 'dashboard' ? 'الرئيسية' : 'المساعد الذكي';
+  }
+
+  function setStatus(text, type = 'idle') {
+    const chip = $("status-chip");
+    chip.textContent = text;
+    const colors = {
+      idle: "bg-slate-100 text-slate-500",
+      run: "bg-sky-100 text-sky-600 border border-sky-200",
+      ok: "bg-green-100 text-green-600 border border-green-200",
+      warn: "bg-amber-100 text-amber-600 border border-amber-200",
+      bad: "bg-red-100 text-red-600 border border-red-200"
+    };
+    chip.className = `text-[10px] px-2 py-1 rounded-md font-bold uppercase tracking-wider ${colors[type]}`;
+  }
+
+  function resetAnalysis() {
+    $("landing-view").classList.remove("hidden");
+    $("results-view").classList.add("hidden");
+    setStatus("جاهز للتحليل", "idle");
+    currentScanId = null;
+    currentReport = null;
+
+    // destroy charts
+    if (charts.lang) charts.lang.destroy();
+    if (charts.score) charts.score.destroy();
+  }
+
+  // ---------- Helpers ----------
+  function toNumber(x, fallback = 0) {
+    if (typeof x === "number" && Number.isFinite(x)) return x;
+    if (typeof x === "string") {
+      const v = parseFloat(x.replace(/,/g, ""));
+      return Number.isFinite(v) ? v : fallback;
+    }
+    return fallback;
+  }
+
+  function clamp(n, min, max) {
+    return Math.max(min, Math.min(max, n));
+  }
+
+  function renderList(elId, items, dotClass = "brand-gradient") {
+    const el = $(elId);
+    el.innerHTML = "";
+    if (!items || items.length === 0) {
+      el.innerHTML = `<li class="text-slate-400 text-sm italic">لا توجد بيانات متاحة</li>`;
+      return;
+    }
+    items.forEach(item => {
+      const li = document.createElement("li");
+      li.className = "flex items-start gap-3 text-sm text-slate-600 font-medium group";
+      li.innerHTML = `
+        <div class="mt-1.5 w-2 h-2 rounded-full ${dotClass} flex-shrink-0 group-hover:scale-125 transition"></div>
+        <span>${String(item)}</span>
+      `;
+      el.appendChild(li);
+    });
+  }
+
+  function addChatMessage(role, text) {
+    const container = $("chatHistory");
+    const wrapper = document.createElement("div");
+    wrapper.className = `flex gap-4 mb-6 fade-in ${role === 'user' ? 'flex-row-reverse self-end' : 'self-start'}`;
+
+    let processedText = (text ?? "").toString().trim();
+
+    const avatarHTML = role === 'user'
+      ? `<div class="avatar bg-slate-200 text-slate-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"></path></svg></div>`
+      : `<div class="avatar brand-gradient text-white"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.477.859h4.00z"></path></svg></div>`;
+
+    wrapper.innerHTML = `
+      ${avatarHTML}
+      <div class="${role === 'user' ? 'message-user' : 'message-ai'} p-5 text-sm leading-relaxed">
+        ${processedText.replace(/\n/g, '<br>')}
+      </div>
+    `;
+    container.appendChild(wrapper);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  // ---------- Charts ----------
+  function initCharts(languageBreakdown = [], readinessScore = 0) {
+    // Language Distribution (LOC by language)
+    if (charts.lang) charts.lang.destroy();
+
+    const bd = Array.isArray(languageBreakdown) ? languageBreakdown : [];
+    const labels = bd.map(x => x.language);
+    const values = bd.map(x => toNumber(x.loc, 0));
+
+    const ctx1 = $('langChart').getContext('2d');
+    charts.lang = new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Lines of Code (LOC)',
+          data: values,
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+
+    // Readiness Doughnut
+    if (charts.score) charts.score.destroy();
+    const ctx2 = $('readinessScoreChart').getContext('2d');
+
+    const score = clamp(toNumber(readinessScore, 0), 0, 100);
+
+    charts.score = new Chart(ctx2, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [score, 100 - score],
+          borderWidth: 0,
+          cutout: '80%'
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: { enabled: false } } }
+    });
+
+    $('scoreVal').textContent = score + '%';
+  }
+
+  // ---------- UI Fill ----------
+  function fillReport(data) {
+    const analysis = data?.analysis || {};
+    const rec = data?.recommendation || {};
+    const comp = data?.compliance || {};
+    const features = data?.features || {};
+    const signals = features?.signals || {};
+
+    // Strategy
+    $("strategy").textContent = rec.strategy_ar || rec.strategy || "—";
+
+    // Confidence (prefer recommendation.confidence then explainability.confidence)
+    const conf = rec.confidence ?? data?.explainability?.confidence;
+    $("confidence").textContent = `الثقة: ${conf ?? "—"}`;
+
+    // Main language + LOC
+    $("mainLang").textContent = analysis.main_language || "—";
+    const locNum = toNumber(analysis.lines_of_code, 0);
+    $("loc").textContent = locNum.toLocaleString("en-US");
+
+    // Compliance
+    const score = clamp(toNumber(comp.score, 0), 0, 100);
+    const compFlag = $("complianceFlag");
+    const compBar = $("complianceBar");
+
+    // reset classes
+    compFlag.className = "text-xl font-black mt-1";
+    compBar.className = "h-full transition-all duration-1000";
+    compBar.style.width = `${score}%`;
+
+    let compText = "—";
+    let compType = "warn";
+
+    if (score >= 80) {
+      compText = `متوافق ✅ (${score}%)`;
+      compFlag.classList.add("text-green-600");
+      compBar.classList.add("bg-green-500");
+      compType = "ok";
+    } else if (score >= 60) {
+      compText = `متوافق جزئياً ⚠️ (${score}%)`;
+      compFlag.classList.add("text-amber-600");
+      compBar.classList.add("bg-amber-400");
+      compType = "warn";
+    } else {
+      compText = `غير متوافق ❌ (${score}%)`;
+      compFlag.classList.add("text-red-600");
+      compBar.classList.add("bg-red-500");
+      compType = "bad";
+    }
+
+    compFlag.textContent = compText;
+
+    // Status chip
+    setStatus("تم التحليل", compType);
+
+    // Roadmap (from API)
+    const rCont = $('roadmapContent');
+    rCont.innerHTML = "";
+    const roadmap = Array.isArray(rec.roadmap) ? rec.roadmap : [];
+    if (roadmap.length === 0) {
+      rCont.innerHTML = `<div class="text-slate-400 text-sm italic">لا توجد خطة متاحة</div>`;
+    } else {
+      roadmap.forEach(step => {
+        const title = step?.phase || "Phase";
+        const items = Array.isArray(step?.items) ? step.items : [];
+        const desc = items.length ? items.map(x => `• ${x}`).join("<br>") : "—";
+
+        rCont.innerHTML += `
+          <div class="roadmap-step">
+            <div class="roadmap-dot"></div>
+            <div class="font-bold text-[#2B2F86] text-sm">${title}</div>
+            <div class="text-xs text-slate-500 mt-2 leading-relaxed">${desc}</div>
+          </div>
+        `;
+      });
+    }
+
+    // Reasons & Risks (from API)
+    renderList("reasons", Array.isArray(rec.reasons) ? rec.reasons : []);
+    renderList("risks", Array.isArray(rec.risks) ? rec.risks : [], "bg-red-400");
+
+    // Compliance issues (strings to avoid [object Object])
+    const issues = Array.isArray(comp.issues) ? comp.issues : [];
+    const compIssuesEl = $("complianceIssues");
+    compIssuesEl.innerHTML = "";
+    if (issues.length === 0) {
+      compIssuesEl.innerHTML = `<div class="text-slate-400 text-sm italic">لا توجد ملاحظات</div>`;
+    } else {
+      issues.slice(0, 10).forEach(t => {
+        const row = document.createElement("div");
+        row.className = "flex items-start gap-3 text-sm text-slate-600 font-medium";
+        row.innerHTML = `<span class="mt-1 w-2 h-2 rounded-full bg-amber-400 flex-shrink-0"></span><span>${t}</span>`;
+        compIssuesEl.appendChild(row);
+      });
+    }
+
+    // Code Insights (from signals)
+    const insights = [
+      { label: "Dockerfile", val: signals.has_docker ? "موجود ✅" : "غير موجود ❌" },
+      { label: "CI Pipeline", val: signals.has_ci ? "موجود ✅" : "غير موجود ❌" },
+      { label: "Tests", val: signals.has_tests ? "موجود ✅" : "غير موجود ❌" },
+      { label: "Kubernetes/Helm", val: signals.has_k8s ? "موجود ✅" : "غير موجود ❌" },
+      { label: "Terraform", val: signals.has_terraform ? "موجود ✅" : "غير موجود ❌" },
+      { label: "ENV Files", val: signals.has_env_file ? "موجود (راجع الإعدادات) ⚠️" : "غير موجود ✅" },
+      { label: "ملفات تم فحصها", val: (signals.files_scanned ?? "—").toString() },
+      { label: "مؤشرات أسرار", val: (signals.secrets_found?.length ? `تم رصد ${signals.secrets_found.length} ⚠️` : "لا يوجد ✅") },
+    ];
+
+    const cIns = $('codeInsights');
+    cIns.innerHTML = "";
+    insights.forEach(i => {
+      cIns.innerHTML += `
+        <div class="flex justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs">
+          <span class="text-slate-500 font-bold">${i.label}</span>
+          <span class="text-[#2B2F86] font-bold">${i.val}</span>
+        </div>
+      `;
+    });
+
+    // Charts (use real API fields)
+    const breakdown = Array.isArray(analysis.language_breakdown) ? analysis.language_breakdown : [];
+    const readinessScore = rec.readiness_score ?? data?.readiness_score ?? 0;
+    initCharts(breakdown, readinessScore);
+
+    // Results meta
+    $("results-meta").textContent = `تحليل المستودع: ${data?.repo_url || $("repoUrl").value}`;
+  }
+
+  // ---------- API Calls ----------
+  async function analyzeRepo() {
+    const repoUrl = $("repoUrl").value.trim();
+    if (!repoUrl) { setStatus("أدخل رابط", "warn"); return; }
+
+    setStatus("جاري التحليل", "run");
+    $("btn-text").textContent = "جاري التحليل...";
+    $("analyzeBtn").disabled = true;
+
+    try {
+      const res = await fetch("/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ repo_url: repoUrl })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "فشل التحليل");
+
+      currentReport = data;
+      currentScanId = data.scan_id;
+
+      fillReport(data);
+
+      $("landing-view").classList.add("hidden");
+      $("results-view").classList.remove("hidden");
+
+      const strategy = data?.recommendation?.strategy_ar || data?.recommendation?.strategy || "—";
+      const readiness = data?.recommendation?.readiness_score ?? data?.readiness_score ?? "—";
+      addChatMessage('ai', `تم الانتهاء من التحليل.\nالاستراتيجية المقترحة: ${strategy}\nمؤشر الجاهزية: ${readiness}%`);
+
+    } catch (err) {
+      setStatus("خطأ بالتحليل", "bad");
+      alert("فشل التحليل: " + (err?.message || "Unknown error"));
+    } finally {
+      $("btn-text").textContent = "ابدأ التقييم";
+      $("analyzeBtn").disabled = false;
+    }
+  }
+
+  async function askChat() {
+    if (!currentScanId) {
+      addChatMessage('ai', 'يرجى العودة للرئيسية وتحليل مستودع أولاً للبدء.');
+      return;
+    }
+    const q = $("question").value.trim();
+    if (!q) return;
+
+    addChatMessage('user', q);
+    $("question").value = "";
+
+    const loading = document.createElement("div");
+    loading.className = "flex gap-4 mb-6 fade-in items-center";
+    loading.id = "chat-loading";
+    loading.innerHTML = `
+      <div class="avatar brand-gradient text-white animate-spin">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+          </path>
+        </svg>
+      </div>
+      <div class="message-ai p-4 text-xs text-slate-400 italic shadow-none">سحابي يفكّر...</div>
+    `;
+    $("chatHistory").appendChild(loading);
+    $("chatHistory").scrollTop = $("chatHistory").scrollHeight;
+
+    try {
+      const res = await fetch(`/chat/${currentScanId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: q })
+      });
+
+      const raw = await res.text();
+      $("chat-loading")?.remove();
+      addChatMessage('ai', (raw || "").trim());
+
+    } catch (err) {
+      $("chat-loading")?.remove();
+      addChatMessage('ai', "عذراً، حدث خطأ أثناء جلب الرد.");
+    }
+  }
+
+  // ---------- Events ----------
+  $("analyzeBtn").addEventListener("click", analyzeRepo);
+  $("askBtn").addEventListener("click", askChat);
+  $("question").addEventListener("keypress", (e) => { if (e.key === 'Enter') askChat(); });
+
+  window.onload = () => {
+    addChatMessage('ai', 'مرحباً بك في سحابي!\nأنا جاهز لتحليل الكود الخاص بك وتقديم خطة ترحيل استراتيجية متكاملة تضمن لك الأمان والامتثال.');
+  };
+</script>
+
+</body>
+
+</html>
